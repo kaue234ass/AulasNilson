@@ -1,0 +1,78 @@
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validação</title>
+    </head>
+<body>
+<form method="post" action="#" onsubmit="return check(event)">
+
+<label for="cpf">Digite seu CPF:</label>
+<input type="text" name="cpf" id="cpf" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" required>
+<br>
+<input type="submit">
+
+</form>
+
+<div id="cpfValidationMessage"></div>
+
+<script>
+    // Função chamada quando o formulário é submetido
+function check(event) {
+    event.preventDefault(); // Impede o comportamento padrão do formulário
+    var cpf = document.getElementById("cpf").value.replace(/\D/g, ''); // Obtém o CPF digitado e remove caracteres não numéricos
+
+// Verifica se o CPF é válido usando a função validateCPF
+    if (validateCPF(cpf)) {
+        // Se o CPF for válido, exibe uma mensagem de CPF válido
+        document.getElementById("cpfValidationMessage").textContent = "CPF válido!";
+    } 
+    else {
+ // Se o CPF for inválido, exibe uma mensagem de CPF inválido e coloca o foco de volta no campo de CPF
+
+        document.getElementById("cpfValidationMessage").textContent = "CPF inválido. ";
+        document.getElementById("cpf").focus();
+    }
+}
+// Função para validar o CPF
+function validateCPF(cpf) { 
+
+     // Verifica se o CPF tem 11 dígitos
+    if (cpf.length !== 11) return false;
+
+    var sum = 0;
+    var remainder;
+
+    // Calcula o primeiro dígito verificador
+    for (var i = 0; i < 9; i++) {
+        sum += parseInt(cpf[i]) * (10 - i);
+    }
+    remainder = (sum * 10) % 11;
+    if (remainder === 10 || remainder === 11) {
+        remainder = 0;
+    }
+     // Compara o primeiro dígito verificador calculado com o dígito verificador fornecido no CPF
+    if (remainder !== parseInt(cpf[9])) return false;
+
+    sum = 0;
+     // Calcula o segundo dígito verificador
+    for (i = 0; i < 10; i++) {
+        sum += parseInt(cpf[i]) * (11 - i);
+    }
+    remainder = (sum * 10) % 11;
+    if (remainder === 10 || remainder === 11) {
+        remainder = 0;
+    }
+    // Compara o segundo dígito verificador calculado com o dígito verificador fornecido no CPF
+
+    if (remainder !== parseInt(cpf[10])) return false;
+// Se ambos os dígitos verificadores forem iguais aos calculados, o CPF é válido
+
+    return true;
+}
+
+</script>
+</body>
+</html>
